@@ -1,7 +1,6 @@
 namespace Pathfinding.Scripts
 {
     using UnityEngine;
-    using _DijkstraAlgorithm.Scripts;
 
     [RequireComponent(typeof(GridVisualizer))]
     [RequireComponent(typeof(GridInput))] 
@@ -33,7 +32,7 @@ namespace Pathfinding.Scripts
         {
             gridVisualizer = GetComponent<GridVisualizer>();
             input = GetComponent<GridInput>();
-            pathfinder = new DijkstraPathfinder();
+            pathfinder = new DFSPathfinder();
         }
 
         void Start()

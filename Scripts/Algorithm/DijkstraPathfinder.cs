@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using Pathfinding.Scripts;
-
-namespace _DijkstraAlgorithm.Scripts
+namespace Pathfinding.Scripts
 {
     public class DijkstraPathfinder : IPathfinder
     {

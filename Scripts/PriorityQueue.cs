@@ -1,4 +1,4 @@
-namespace _DijkstraAlgorithm.Scripts
+namespace Pathfinding.Scripts
 {
     using System.Collections.Generic;
     using System;
