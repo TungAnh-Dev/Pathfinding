@@ -8,10 +8,10 @@ namespace _DijkstraAlgorithm.Scripts
 {
     public class DijkstraPathfinder : IPathfinder
     {
-        private PriorityQueue<Node> _frontier = new PriorityQueue<Node>();
-        private Dictionary<Node, Node> _cameFrom = new Dictionary<Node, Node>();
-        private Dictionary<Node, float> _costSoFar = new Dictionary<Node, float>();
-        private List<Node> _pathCache = new List<Node>();
+        private PriorityQueue<Node> priortyQueue = new PriorityQueue<Node>();
+        private Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>();
+        private Dictionary<Node, float> costSoFar = new Dictionary<Node, float>();
+        private List<Node> pathCache = new List<Node>();
 
         public List<Node> FindPath(Node start, Node end)
         {
@@ -28,15 +28,15 @@ namespace _DijkstraAlgorithm.Scripts
 
             ClearData();
 
-            _frontier.Enqueue(start, 0);
-            _cameFrom[start] = null;
-            _costSoFar[start] = 0;
+            priortyQueue.Enqueue(start, 0);
+            cameFrom[start] = null;
+            costSoFar[start] = 0;
 
             var wait = new WaitForSeconds(delay);
 
-            while (_frontier.Count > 0)
+            while (priortyQueue.Count > 0)
             {
-                Node current = _frontier.Dequeue();
+                Node current = priortyQueue.Dequeue();
 
                 if (current == end) break;
 
@@ -47,13 +47,13 @@ namespace _DijkstraAlgorithm.Scripts
                 foreach (Node next in current.Neighbors)
                 {
                     float dist = Vector3.Distance(current.Position, next.Position);
-                    float newCost = _costSoFar[current] + (dist * next.Penalty);
+                    float newCost = costSoFar[current] + (dist * next.Penalty);
 
-                    if (!_costSoFar.ContainsKey(next) || newCost < _costSoFar[next])
+                    if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                     {
-                        _costSoFar[next] = newCost;
-                        _cameFrom[next] = current;
-                        _frontier.Enqueue(next, newCost);
+                        costSoFar[next] = newCost;
+                        cameFrom[next] = current;
+                        priortyQueue.Enqueue(next, newCost);
 
                         if (next != end) onFrontier?.Invoke(next);
                     }
@@ -69,25 +69,25 @@ namespace _DijkstraAlgorithm.Scripts
             if (start == null || end == null) return;
             ClearData();
             
-            _frontier.Enqueue(start, 0);
-            _cameFrom[start] = null;
-            _costSoFar[start] = 0;
+            priortyQueue.Enqueue(start, 0);
+            cameFrom[start] = null;
+            costSoFar[start] = 0;
 
-            while (_frontier.Count > 0)
+            while (priortyQueue.Count > 0)
             {
-                Node current = _frontier.Dequeue();
+                Node current = priortyQueue.Dequeue();
                 if (current == end) break;
 
                 foreach (Node next in current.Neighbors)
                 {
                     float dist = Vector3.Distance(current.Position, next.Position);
-                    float newCost = _costSoFar[current] + (dist * next.Penalty);
+                    float newCost = costSoFar[current] + (dist * next.Penalty);
 
-                    if (!_costSoFar.ContainsKey(next) || newCost < _costSoFar[next])
+                    if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                     {
-                        _costSoFar[next] = newCost;
-                        _cameFrom[next] = current;
-                        _frontier.Enqueue(next, newCost);
+                        costSoFar[next] = newCost;
+                        cameFrom[next] = current;
+                        priortyQueue.Enqueue(next, newCost);
                     }
                 }
             }
@@ -95,27 +95,27 @@ namespace _DijkstraAlgorithm.Scripts
 
         private List<Node> ReconstructPath(Node start, Node end)
         {
-            if (!_cameFrom.ContainsKey(end)) return null;
+            if (!cameFrom.ContainsKey(end)) return null;
 
-            _pathCache.Clear();
+            pathCache.Clear();
             Node curr = end;
 
             while (curr != start)
             {
-                _pathCache.Add(curr);
-                curr = _cameFrom[curr];
+                pathCache.Add(curr);
+                curr = cameFrom[curr];
             }
-            _pathCache.Add(start);
-            _pathCache.Reverse();
+            pathCache.Add(start);
+            pathCache.Reverse();
 
-            return new List<Node>(_pathCache);
+            return new List<Node>(pathCache);
         }
 
         private void ClearData()
         {
-            _frontier.Clear();
-            _cameFrom.Clear();
-            _costSoFar.Clear();
+            priortyQueue.Clear();
+            cameFrom.Clear();
+            costSoFar.Clear();
         }
     }
 }

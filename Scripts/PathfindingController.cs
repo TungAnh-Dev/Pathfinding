@@ -22,53 +22,53 @@ namespace Pathfinding.Scripts
         public float stepDelay = 0.05f;
 
         // Modules
-        private GridGenerator _generator = new GridGenerator();
-        private GridVisualizer _visualizer;
-        private GridInput _input;
-        private IPathfinder _pathfinder;
+        private GridGenerator gridGenertor = new GridGenerator();
+        private GridVisualizer gridVisualizer;
+        private GridInput input;
+        private IPathfinder pathfinder;
 
-        private Node _startNode, _endNode;
-        private Coroutine _pathRoutine;
+        private Node startNode, endNode;
+        private Coroutine pathRoutine;
 
         void Awake()
         {
-            _visualizer = GetComponent<GridVisualizer>();
-            _input = GetComponent<GridInput>();
-            _pathfinder = new DijkstraPathfinder();
+            gridVisualizer = GetComponent<GridVisualizer>();
+            input = GetComponent<GridInput>();
+            pathfinder = new DijkstraPathfinder();
         }
 
         void Start()
         {
-            _input.OnLeftClick += HandleLeftClick;
-            _input.OnRightClick += HandleRightClick;
-            _input.OnClearInput += ResetPath;
+            input.OnLeftClick += HandleLeftClick;
+            input.OnRightClick += HandleRightClick;
+            input.OnClearInput += ResetPath;
             
-            _input.gridHeight = transform.position.y + originOffset.y;
+            input.gridHeight = transform.position.y + originOffset.y;
 
             Generate();
         }
         
         void OnDestroy()
         {
-            if (_input != null)
+            if (input != null)
             {
-                _input.OnLeftClick -= HandleLeftClick;
-                _input.OnRightClick -= HandleRightClick;
-                _input.OnClearInput -= ResetPath;
+                input.OnLeftClick -= HandleLeftClick;
+                input.OnRightClick -= HandleRightClick;
+                input.OnClearInput -= ResetPath;
             }
         }
 
         [ContextMenu("Generate")]
         public void Generate()
         {
-            _generator.Generate(width, height, cellSize, obstaclePercent, seed, allowDiagonal, transform.position + originOffset);
-            _visualizer.Visualize(_generator.Graph);
+            gridGenertor.Generate(width, height, cellSize, obstaclePercent, seed, allowDiagonal, transform.position + originOffset);
+            gridVisualizer.Visualize(gridGenertor.Graph);
         }
 
 
         private void HandleLeftClick(Vector3 worldPos)
         {
-            Node n = _generator.GetNodeFromWorldPos(worldPos, transform.position + originOffset, cellSize, width, height);
+            Node n = gridGenertor.GetNodeFromWorldPos(worldPos, transform.position + originOffset, cellSize, width, height);
             
             if (IsValidNode(n))
             {
@@ -78,7 +78,7 @@ namespace Pathfinding.Scripts
 
         private void HandleRightClick(Vector3 worldPos)
         {
-            Node n = _generator.GetNodeFromWorldPos(worldPos, transform.position + originOffset, cellSize, width, height);
+            Node n = gridGenertor.GetNodeFromWorldPos(worldPos, transform.position + originOffset, cellSize, width, height);
             
             if (IsValidNode(n))
             {
@@ -95,37 +95,37 @@ namespace Pathfinding.Scripts
         private void SetStart(Node n) 
         { 
             ResetPath(); 
-            _startNode = n; 
-            _visualizer.UpdateNode(n, v => v.SetAsStart()); 
+            startNode = n; 
+            gridVisualizer.UpdateNode(n, v => v.SetAsStart()); 
         }
 
         private void SetEndAndRun(Node n)
         {
-            if (_startNode == null) return;
-            if (_pathRoutine != null) StopCoroutine(_pathRoutine);
+            if (startNode == null) return;
+            if (pathRoutine != null) StopCoroutine(pathRoutine);
             
-            _visualizer.ResetColors();
-            _visualizer.UpdateNode(_startNode, v => v.SetAsStart()); 
+            gridVisualizer.ResetColors();
+            gridVisualizer.UpdateNode(startNode, nodeObj => nodeObj.SetAsStart()); 
             
-            _endNode = n;
-            _visualizer.UpdateNode(n, v => v.SetAsEnd());
+            endNode = n;
+            gridVisualizer.UpdateNode(n, nodeObj => nodeObj.SetAsEnd());
 
-            _pathRoutine = StartCoroutine(_pathfinder.FindPathStepByStep(_startNode, _endNode, stepDelay,
-                onProcessing: node => _visualizer.UpdateNode(node, v => v.SetAsProcessing()),
-                onFrontier: node => _visualizer.UpdateNode(node, v => v.SetAsFrontier()),
+            pathRoutine = StartCoroutine(pathfinder.FindPathStepByStep(startNode, endNode, stepDelay,
+                onProcessing: node => gridVisualizer.UpdateNode(node, nodeObj => nodeObj.SetAsProcessing()),
+                onFrontier: node => gridVisualizer.UpdateNode(node, nodeObj => nodeObj.SetAsFrontier()),
                 onFinished: path => {
                     if (path != null) 
                         foreach (var node in path) 
-                            if (node != _startNode && node != _endNode) 
-                                _visualizer.UpdateNode(node, v => v.SetAsPath());
+                            if (node != startNode && node != endNode) 
+                                gridVisualizer.UpdateNode(node, nodeObj => nodeObj.SetAsPath());
                 }));
         }
 
         private void ResetPath() 
         { 
-            if (_pathRoutine != null) StopCoroutine(_pathRoutine); 
-            _startNode = _endNode = null; 
-            _visualizer.ResetColors(); 
+            if (pathRoutine != null) StopCoroutine(pathRoutine); 
+            startNode = endNode = null; 
+            gridVisualizer.ResetColors(); 
         }
     }
 }
