@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace _DijkstraAlgorithm.Scripts
+namespace Pathfinding.Scripts
 {
     public class Graph
     {
