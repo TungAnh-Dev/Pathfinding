@@ -7,6 +7,8 @@ namespace Pathfinding.Scripts
     [RequireComponent(typeof(GridInput))] 
     public class PathfindingController : MonoBehaviour
     {
+        [Header("Generator Module")]
+        public GridGenerator generator;
         [Header("Grid Config")]
         public int width = 15;
         public int height = 15;
@@ -20,9 +22,6 @@ namespace Pathfinding.Scripts
 
         [Header("Algorithm")]
         public float stepDelay = 0.05f;
-
-        // Modules
-        private GridGenerator gridGenertor = new GridGenerator();
         private GridVisualizer gridVisualizer;
         private GridInput input;
         private IPathfinder pathfinder;
@@ -61,15 +60,15 @@ namespace Pathfinding.Scripts
         [ContextMenu("Generate")]
         public void Generate()
         {
-            gridGenertor.Generate(width, height, cellSize, obstaclePercent, seed, allowDiagonal, transform.position + originOffset);
-            gridVisualizer.Visualize(gridGenertor.Graph);
+            generator.Generate();
+            gridVisualizer.Visualize(generator.Graph);
         }
 
 
         private void HandleLeftClick(Vector3 worldPos)
         {
-            Node n = gridGenertor.GetNodeFromWorldPos(worldPos, transform.position + originOffset, cellSize, width, height);
-            
+            Node n = generator.GetNodeFromWorldPos(worldPos);
+
             if (IsValidNode(n))
             {
                 SetEndAndRun(n);
@@ -78,7 +77,7 @@ namespace Pathfinding.Scripts
 
         private void HandleRightClick(Vector3 worldPos)
         {
-            Node n = gridGenertor.GetNodeFromWorldPos(worldPos, transform.position + originOffset, cellSize, width, height);
+            Node n = generator.GetNodeFromWorldPos(worldPos);
             
             if (IsValidNode(n))
             {

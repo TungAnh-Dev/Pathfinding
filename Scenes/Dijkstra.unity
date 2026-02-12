@@ -389,6 +389,8 @@ GameObject:
   - component: {fileID: 759060563}
   - component: {fileID: 759060562}
   - component: {fileID: 759060561}
+  - component: {fileID: 759060564}
+  - component: {fileID: 759060565}
   m_Layer: 0
   m_Name: PathfindingController
   m_TagString: Untagged
@@ -424,6 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 525dc905c56382d4691ba137feb67af8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  generator: {fileID: 759060565}
   width: 15
   height: 15
   cellSize: 2.5
@@ -462,6 +465,45 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   gridHeight: 0
+--- !u!114 &759060564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759060558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78f27f4e2b7267744a1975b9a83dd2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 15
+  height: 15
+  cellSize: 2.5
+  originOffset: {x: -17, y: 0, z: -17}
+  obstaclePercent: 0.2
+  seed: 123
+  showGrid: 0
+  allowDiagonal: 1
+--- !u!114 &759060565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759060558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 839f62d516035b141a195dc67a9177c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 15
+  height: 15
+  cellSize: 2.5
+  originOffset: {x: -17, y: 0, z: -17}
+  obstaclePercent: 0.2
+  seed: 0
+  showGrid: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
